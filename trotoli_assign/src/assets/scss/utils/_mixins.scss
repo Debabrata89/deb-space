@@ -1,0 +1,62 @@
+@mixin transition($time,$type) {
+  -webkit-transition: all $time $type;
+  -moz-transition: all $time $type;
+  -o-transition: all $time $type;
+  transition: all $time $type;
+}
+
+@mixin font($font) {
+  font-family:'BentonSans-#{$font}';
+}
+
+@mixin box-shadow($hor, $ver, $blur-r,$spread-r, $color) {
+  box-shadow: $hor $ver $blur-r $spread-r $color;
+  -webkit-box-shadow: $hor $ver $blur-r $spread-r $color;
+  -moz-box-shadow: $hor $ver $blur-r $spread-r $color;
+}
+
+@mixin border-right($px,$color) {
+  border-right: $px solid $color;
+}
+
+@mixin border-left($px,$color) {
+  border-left: $px solid $color;
+}
+
+@mixin b-radius-s($tl,$tr,$br,$bl) {
+  -webkit-border-radius: $tl $tr $br $bl;
+  -moz-border-radius: $tl $tr $br $bl;
+  border-radius: $tl $tr $br $bl;
+}
+
+@mixin b-radius($px) {
+  -webkit-border-radius: $px;
+  -moz-border-radius: $px;
+  border-radius: $px;
+}
+
+@mixin border-lr($px,$color) {
+  border-left: $px solid $color;
+  border-right: $px solid $color;
+}
+
+@mixin border($px,$color) {
+  border: $px solid $color;
+}
+
+@mixin break-into-columns($no-of-cols, $gap) {
+  -moz-column-count: $no-of-cols;
+  -moz-column-gap: $gap;
+  -webkit-column-count: $no-of-cols;
+  -webkit-column-gap: $gap;
+  column-count: $no-of-cols;
+  column-gap: $gap;
+}
+
+@mixin vertical-align($position,$top,$tl) {
+  position: $position;
+  top: $top;
+  -webkit-transform: translateY($tl);
+  -ms-transform: translateY($tl);
+  transform: translateY($tl);
+}

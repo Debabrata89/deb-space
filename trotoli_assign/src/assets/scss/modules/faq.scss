@@ -1,0 +1,175 @@
+@import "../base/base";
+
+.header {
+  .header-wrap {
+    .customized-travel {
+      h3 {
+        font-size: 34px;
+        letter-spacing: 1px;
+      }
+    }
+  }
+}
+
+.noUi-horizontal {
+  height: 7px;
+  margin-top: 50px;
+  margin-left: 20px;
+  .noUi-handle {
+    top: -8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 9999px;
+    background: $primary;
+    box-shadow: none;
+    border: none;
+    &:after, &:before {
+      background: transparent;
+    }
+  }
+}
+
+.no-of-days-wrap {
+  //padding-left: 45px;
+  .noUi-handle-lower {
+    .noUi-tooltip {
+      color: #000;
+      font-size: 12px;
+      left: -7px;
+      border: solid 1px #dddddd;
+    }
+  }
+  .noUi-handle-upper {
+    .noUi-tooltip {
+      border: solid 1px #dddddd;
+      color: #000;
+      font-size: 12px;
+      left: -13px;
+      top: -32px;
+      bottom: inherit;
+      left: -7px;
+    }
+  }
+  .noUi-connect {
+    background: $primary;
+  }
+}
+
+.tours {
+  .header {
+    background: url('../../images/tours_banner.jpg');
+    background-size: cover;
+  }
+}
+
+.tour-tabs {
+  border-bottom: solid 0.5px $border;
+  .nav-justified {
+    width: 50%;
+    margin: auto;
+  }
+  .nav-pills {
+    li {
+      a {
+        border-bottom: 2px solid #fff;
+        border-radius: 0;
+        font-size: 12px;
+        padding: 20px 15px;
+        color: #000;
+        @include font('Medium');
+      }
+    }
+  }
+  .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+    color: $primary;
+    background-color: transparent;
+    border-bottom: 2px solid $primary;
+  }
+  .nav > li > a:focus, .nav > li > a:hover {
+    text-decoration: none;
+    background-color: #eee;
+    border-bottom: 2px solid #eee;
+  }
+}
+
+/* faq */
+.faq {
+  .faq-wrap {
+    padding: 20px 0 0;
+    .container {
+      .body {
+        margin: 10px auto 20px;
+        width: 90%;
+        border-bottom: solid 0.5px #dddddd;
+        padding-bottom: 20px;
+        .faq-que {
+          font-weight: 700;
+          @include font('Medium');
+        }
+        .faq-sol {
+          font-size: 12px;
+          margin-bottom: 20px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+}
+
+.terms {
+  .faq-wrap {
+    .container {
+      .body {
+        border-bottom: none;
+        .faq-sol {
+          margin-bottom: 7px;
+        }
+      }
+    }
+  }
+}
+
+/*Layout for Mobile(lanscape)*/
+@media handheld, only screen and (max-width: 767px) {
+  .tour-tabs {
+    .nav-justified {
+      width: 100%;
+
+      li {
+        float: left;
+      }
+    }
+    .nav-pills {
+      li {
+        a {
+          padding: 15px 10px;
+          margin-bottom: 0;
+          font-size: 10px;
+        }
+      }
+    }
+  }
+
+  .head {
+    .title {
+      h4 {
+        @include font('Book');
+        font-size: 26px;
+      }
+    }
+  }
+
+  .pagination {
+    padding-left: 0;
+  }
+}
+
+/*Layout for Mobile(portrait)*/
+@media only screen and (max-width: 479px) {
+
+}
+
+/*Small Moblie Screen*/
+@media only screen and (max-width: 320px) {
+
+}

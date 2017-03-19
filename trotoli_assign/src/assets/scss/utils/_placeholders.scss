@@ -1,0 +1,28 @@
+%btn-tmpl {
+  border-radius: 3px;
+  background-color: $primary;
+  font-family: BentonSans-Medium;
+  font-size: 14px;
+  color: #ffffff;
+  padding: 10px 25px;
+  border: 1px solid #12b1bf;
+  &:hover {
+    background: transparent;
+    color: $primary;
+  }
+}
+
+%btn-trans-tmpl {
+  border-radius: 3px;
+  padding: 8px 25px;
+  font-family: BentonSans-Medium;
+  font-size: 12px;
+  color: $primary;
+  border: solid 1px $primary;
+  background: transparent;
+  &:hover {
+    background: $primary;
+    border: solid 1px $primary;
+    color: #fff !important;
+  }
+}

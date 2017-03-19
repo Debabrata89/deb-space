@@ -1,0 +1,142 @@
+@import "../base/base";
+
+.pr-body {
+  padding: 0 50px 100px;
+  margin-left: 8.33333333%;
+  margin-top: 62px;
+  .ytrip-block {
+    border: 1px solid #dddddd;
+    padding: 15px 1px;
+    margin-bottom: 20px;
+  }
+  .yt-center {
+    padding-left: 25px;
+    .yt-row {
+      color: #000000;
+      font-size: 12px;
+      .yt-th {
+        padding: 0;
+        p {
+          opacity: 0.5;
+          font-size: 12px;
+          margin-bottom: 12px;
+        }
+      }
+      .yt-td {
+        p {
+          font-size: 12px;
+          margin-bottom: 12px;
+          &.s-wait {
+            color: #FF3000;
+          }
+          &.s-booked {
+            color: #0FCF81;
+          }
+        }
+      }
+    }
+  }
+  .yt-right {
+    padding-top: 10px;
+    padding-right: 30px;
+    .yt-row {
+      color: #000000;
+      font-size: 12px;
+      .yt-th {
+        padding: 0;
+        p {
+          font-size: 12px;
+          margin-bottom: 5px;
+        }
+      }
+      .yt-td {
+        p {
+          opacity: 0.5;
+          font-size: 12px;
+          margin-bottom: 5px;
+        }
+      }
+      .total {
+        font-size: 14px !important;
+      }
+    }
+    .pay-btn {
+      margin-top: 40px;
+      float: right;
+      button {
+        @extend %btn-trans-tmpl;
+        padding: 8px 15px;
+        margin-left: 10px;
+      }
+      a {
+        color: $primary;
+        font-size: 12px;
+        margin-left: 0px;
+        padding: 0;
+        img {
+          height: 14px;
+          margin-right: 4px;
+          margin-top: -3px;
+        }
+      }
+    }
+  }
+  .title {
+    h4 {
+      font-size: 20px;
+      color: #000000;
+      margin-bottom: 15px;
+    }
+  }
+}
+
+/*Layout for Mobile(lanscape)*/
+@media handheld, only screen and (max-width: 767px) {
+  .pr-body {
+    padding: 30px 40px 30px;
+    margin-left: initial;
+    .pr-body-wrap {
+
+    }
+    .ytrip-block {
+      padding: 15px 1px 20px;
+    }
+    .title {
+      h4 {
+        text-align: center;
+      }
+    }
+    .yt-center {
+      padding: 5px 20px 0 30px;
+      .yt-row {
+        .yt-td {
+          text-align: right;
+        }
+      }
+    }
+    .yt-right {
+      padding: 10px 20px 0 20px;
+      .yt-row {
+        padding-left: 10px;
+      }
+      .pay-btn {
+        margin-top: 10px;
+        float: none;
+        a {
+          font-size: 10px;
+          margin-left: 3px;
+        }
+      }
+    }
+  }
+}
+
+/*Layout for Mobile(portrait)*/
+@media only screen and (max-width: 479px) {
+
+}
+
+/*Small Moblie Screen*/
+@media only screen and (max-width: 320px) {
+
+}
