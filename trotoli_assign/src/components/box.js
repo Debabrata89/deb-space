@@ -5,17 +5,33 @@ export default class Box extends React.Component {
         super(props, context);
         this.state = {
             daySelected: Object.keys(props.data)[0],
-            showModal : false
+            showModal: false,
+            resultIndex: 0
         };
         this.changeDay = this.changeDay.bind(this);
         this.showflightModal = this.showflightModal.bind(this);
         this.changeModalState = this.changeModalState.bind(this);
+        this.refreshData = this.refreshData.bind(this);
+        this.setDayByModal = this.setDayByModal.bind(this);
+        this.getImage = this.getImage.bind(this);
 
     }
-     changeModalState(value){
-         this.setState({ showModal: value });
+    getImage(value) {
+        if (value == 'CZ' || value == 'IX') {
+            return value + '.jpg';
+        }
+        return value + '.gif';
     }
-    showflightModal(event){
+    refreshData(value) {
+        this.setState({ resultIndex: value });
+    }
+    setDayByModal(value) {
+        this.setState({ daySelected: value });
+    }
+    changeModalState(value) {
+        this.setState({ showModal: value });
+    }
+    showflightModal(event) {
         this.setState({ showModal: true });
     }
     changeDay(event) {
@@ -27,7 +43,7 @@ export default class Box extends React.Component {
         console.log("inside box js", this.props.data);
         let self = this;
         let flightData = this.props.data;
-        let daysArray =Object.keys(this.props.data).map((value, index) => {
+        let daysArray = Object.keys(this.props.data).map((value, index) => {
             return (value);
         });
         return (
@@ -65,17 +81,17 @@ export default class Box extends React.Component {
                                             </div>
                                             <div className="title">
                                                 <h3>{flightData[self.state.daySelected]["Response"]["Origin"]} TO {" " + flightData[self.state.daySelected]["Response"]["Destination"]}
-                                                    <span>{flightData[self.state.daySelected]["Response"]["Results"][0][0]['Price']['OfferedFare']}{flightData[self.state.daySelected]["Response"]["Results"][0][0]['Price']['Currency']}/Person</span></h3>
+                                                    <span>{flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]['Price']['OfferedFare']}{flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]['Price']['Currency']}/Person</span></h3>
                                             </div>
                                         </div>
-                                        {flightData[self.state.daySelected]["Response"]["Results"][0][0]["Segments"][0].map((segment, index) => {
+                                        {flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]["Segments"][0].map((segment, index) => {
                                             return (<div key={index} className="flight-body">
                                                 <div className="row flights-wrap">
                                                     <div className="col-md-3 col-sm-3 col-xs-12 flight-logo">
-                                                        <img src="src/assets/images/flight-logo.png" />
+                                                        <img src={"src/assets/images/" + self.getImage(flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]["AirlineCode"])} />
                                                         <div>
                                                             <p>{segment["Airline"]["AirlineName"]} </p>
-                                                            <p>{flightData[self.state.daySelected]["Response"]["Results"][0][0]["AirlineCode"]}</p>
+                                                            <p>{flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]["AirlineCode"]}</p>
                                                         </div>
                                                     </div>
                                                     <div className="col-md-3 col-sm-3 col-xs-12">
@@ -88,10 +104,10 @@ export default class Box extends React.Component {
                                                     </div>
                                                     <div className="col-md-3 col-sm-3 col-xs-12 pd-0">
                                                         <ul>
-                                                            <li className="airport">{segment["Airline"]["FareClass"]} | 
-                                                                {flightData[self.state.daySelected]["Response"]["Results"][0][0]['isRefundable']?'Refundable':'NonRefundable'} | 
-                                                                {flightData[self.state.daySelected]["Response"]["Results"][0][0]['BaggageAllowance'].replace(" ","")}
-                                                                        </li>
+                                                            <li className="airport">{segment["Airline"]["FareClass"]} |
+                                                                {flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]['isRefundable'] ? 'Refundable' : 'NonRefundable'} |
+                                                                {flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]['BaggageAllowance']}
+                                                            </li>
                                                             <li>
                                                                 <img src="src/assets/images/connector.png"
                                                                     className="img-responsive full-width" />
@@ -155,7 +171,7 @@ export default class Box extends React.Component {
                     </div>
                 </div>
 
-               {self.state.showModal ? <FlightModal dialogClassName={"booking modal-custom-cls modal-lg"} daySelected={self.state.daySelected} showModal={self.state.showModal} days={daysArray} data={flightData} changeModalState={self.changeModalState} /> :null}
+                {self.state.showModal ? <FlightModal setDayByModal={this.setDayByModal} refreshData={this.refreshData} dialogClassName={"booking modal-custom-cls modal-lg"} daySelected={self.state.daySelected} showModal={self.state.showModal} days={daysArray} data={flightData} changeModalState={self.changeModalState} /> : null}
             </div>
         );
     }

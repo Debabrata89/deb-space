@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+console.log("path", path.join(__dirname,'/build'));
 module.exports={
   devtool :'inline-source-map',
   entry : ['webpack-dev-server/client?http://127.0.0.1:8000',
@@ -8,7 +9,7 @@ module.exports={
   ] ,
   output :{
     path : path.join(__dirname,'/build'),
-    fileName : 'bundle.js'
+    fileName : 'build/bundle.js'
   },
   resolve:{
     modulesDirectories : ['node_modules','src'],

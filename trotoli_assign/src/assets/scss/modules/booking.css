@@ -4089,7 +4089,6 @@ input[type=number]::-webkit-outer-spin-button {
 .booking.modal-custom-cls .flight-row{
   padding-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #dddddd;
     margin: 0px 30px;
     position: relative;
 }
@@ -4142,4 +4141,29 @@ input[type=number]::-webkit-outer-spin-button {
     background: #12b1bf;
     border: solid 1px #12b1bf;
     color: #fff !important;
+}
+
+.booking.modal-custom-cls .modal-body .filter-bar {
+    margin: 0;
+    padding: 10px 20px;
+    border-bottom: 1px solid #dddddd;
+}
+.booking.modal-custom-cls .modal-body  .select2-container {
+    margin-right: 10px;
+}
+.booking.modal-custom-cls .modal-body  .filter-by {
+    margin-right: 20px;
+}
+.booking.modal-custom-cls .select2{
+  width : 120px !important;
+}
+#flight-border{
+  width :100%;
+  border-bottom: 1px solid #dddddd;
+  border-top:0; 
+  position: relative;
+    top: 20px;
+}
+.booking.modal-custom-cls .flight-table .col-md-2:first-child {
+    color: #000;
 }
