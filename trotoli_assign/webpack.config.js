@@ -8,8 +8,8 @@ module.exports={
   './src'
   ] ,
   output :{
-    path : path.join(__dirname,'/build'),
-    fileName : 'build/bundle.js'
+   path: path.join(__dirname, 'build'),
+    filename: 'bundle.js',
   },
   resolve:{
     modulesDirectories : ['node_modules','src'],
