@@ -4167,3 +4167,6 @@ input[type=number]::-webkit-outer-spin-button {
 .booking.modal-custom-cls .flight-table .col-md-2:first-child {
     color: #000;
 }
+ .select2-search--dropdown{
+  display : none;
+}
