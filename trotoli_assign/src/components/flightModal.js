@@ -10,13 +10,19 @@ export default class flightHeader extends React.Component {
             stopsArray: [],
             deptArray: [],
             airlinesArray: [],
+            fareClassArray: [],
             selectedStop: '',
             selectedFareType: '',
             selectedAirlines: '',
             selectedArrTime: '',
             selectedDepartureTime: '',
+            selectedFareClass: '',
             isAscendingDepart: true,
-            flightsArray: props.data[props.daySelected]["Response"]["Results"][0]
+            flightsArray: props.data[props.daySelected]["Response"]["Results"][0],
+            sortDirectionDepTime: "",
+            sortDirectionArrTime: "",
+            sortDirectionPrice: "asc",
+            sortDirectionDuration: ""
         };
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
@@ -24,74 +30,75 @@ export default class flightHeader extends React.Component {
         this.refreshData = this.refreshData.bind(this);
         this.getImage = this.getImage.bind(this);
     }
-    sortFlight(sortKey, sortType, event) {
-        console.log("data", sortKey, sortType);
-        let self = this;
-        let flightsArray = self.state.flightsArray;
-        console.log("flight array", flightsArray);
-        let sortKeyParent = sortKey === 'DepTime' ? 'Origin' : 'Destination';
-            flightsArray.sort((flight1, flight2) => {
-                let time1 = flight1["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":");
-                let time2 = flight2["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":");
-                if (sortType === 'asc') {
-                    if (parseInt(time1[0]) === parseInt(time2[0]) && parseInt(time1[1]) == parseInt(time2[1]) && parseInt(time1[2]) == parseInt(time2[2])) {
-                        return 0;
-                    } else if (parseInt(time1[0]) < parseInt(time2[0])) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
-                } else {
-                    if (parseInt(time1[0]) === parseInt(time2[0]) && parseInt(time1[1]) == parseInt(time2[1]) && parseInt(time1[2]) == parseInt(time2[2])) {
-                        return 0;
-                    } else if (parseInt(time1[0]) > parseInt(time2[0])) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
-                }
-
-
-            });
-
-
-        
-        self.setState({ flightsArray: flightsArray });
-    }
-    // sortDuration(sortKey, sortType, event) {
+    // sortFlight(sortKey, sortType, event) {
     //     console.log("data", sortKey, sortType);
     //     let self = this;
     //     let flightsArray = self.state.flightsArray;
     //     console.log("flight array", flightsArray);
     //     let sortKeyParent = sortKey === 'DepTime' ? 'Origin' : 'Destination';
-    //         flightsArray.sort((flight1, flight2) => {
-    //             let time1 = flight1["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":");
-    //             let time2 = flight2["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":");
-    //             if (sortType === 'asc') {
-    //                 if (parseInt(time1[0]) === parseInt(time2[0]) && parseInt(time1[1]) == parseInt(time2[1]) && parseInt(time1[2]) == parseInt(time2[2])) {
-    //                     return 0;
-    //                 } else if (parseInt(time1[0]) > parseInt(time2[0])) {
-    //                     return 1;
-    //                 } else {
-    //                     return -1;
-    //                 }
+    //     flightsArray.sort((flight1, flight2) => {
+    //         let time1 = flight1["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":");
+    //         let time2 = flight2["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":");
+    //         if (sortType === 'asc') {
+    //             if (parseInt(time1[0]) === parseInt(time2[0]) && parseInt(time1[1]) == parseInt(time2[1]) && parseInt(time1[2]) == parseInt(time2[2])) {
+    //                 return 0;
+    //             } else if (parseInt(time1[0]) < parseInt(time2[0])) {
+    //                 return 1;
     //             } else {
-    //                 if (parseInt(time1[0]) === parseInt(time2[0]) && parseInt(time1[1]) == parseInt(time2[1]) && parseInt(time1[2]) == parseInt(time2[2])) {
-    //                     return 0;
-    //                 } else if (parseInt(time1[0]) < parseInt(time2[0])) {
-    //                     return 1;
-    //                 } else {
-    //                     return -1;
-    //                 }
+    //                 return -1;
     //             }
+    //         } else {
+    //             if (parseInt(time1[0]) === parseInt(time2[0]) && parseInt(time1[1]) == parseInt(time2[1]) && parseInt(time1[2]) == parseInt(time2[2])) {
+    //                 return 0;
+    //             } else if (parseInt(time1[0]) > parseInt(time2[0])) {
+    //                 return 1;
+    //             } else {
+    //                 return -1;
+    //             }
+    //         }
 
 
-    //         });
+    //     });
 
 
-        
+
     //     self.setState({ flightsArray: flightsArray });
     // }
+    sortDuration(sortKey, sortType, event) {
+        console.log("data", sortKey, sortType);
+        let self = this;
+        let flightsArray = self.state.flightsArray;
+        flightsArray.map((flight, index) => {
+            flight["Segments"][0].sort((segment1, segment2) => {
+                if (sortType === 'asc') {
+                    if (segment1.Duration === segment2.Duration) {
+                        return 0;
+                    } else if (segment1.Duration > segment2.Duration) {
+                        return 1;
+                    } else {
+                        return -1
+                    }
+
+                } else {
+                    if (segment1.Duration === segment2.Duration) {
+                        return 0;
+                    } else if (segment1.Duration < segment2.Duration) {
+                        return 1;
+                    } else {
+                        return -1
+                    }
+                }
+            });
+
+
+
+
+        });
+
+
+
+        self.setState({ flightsArray: flightsArray, sortDirectionDuration: sortType });
+    }
 
     sortFlight(sortKey, sortType, event) {
         console.log("data", sortKey, sortType);
@@ -99,33 +106,34 @@ export default class flightHeader extends React.Component {
         let flightsArray = self.state.flightsArray;
         console.log("flight array", flightsArray);
         let sortKeyParent = sortKey === 'DepTime' ? 'Origin' : 'Destination';
-            flightsArray.sort((flight1, flight2) => {
-                let time1 = flight1["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":");
-                let time2 = flight2["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":");
-                if (sortType === 'asc') {
-                    if (parseInt(time1[0]) === parseInt(time2[0]) && parseInt(time1[1]) == parseInt(time2[1]) && parseInt(time1[2]) == parseInt(time2[2])) {
-                        return 0;
-                    } else if (parseInt(time1[0]) > parseInt(time2[0])) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
+        let departOrArrKey = sortKey === 'DepTime' ? 'sortDirectionDepTime' : 'sortDirectionArrTime';
+        flightsArray.sort((flight1, flight2) => {
+            let time1 =sortKey === 'DepTime'? flight1["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":") : flight1["Segments"][0][flight1["Segments"][0].length-1][sortKeyParent][sortKey].split("T")[1].split(":");
+            let time2 =sortKey === 'DepTime' ?  flight2["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":") : flight2["Segments"][0][flight2["Segments"][0].length-1][sortKeyParent][sortKey].split("T")[1].split(":");
+            if (sortType === 'asc') {
+                if (parseInt(time1[0]) === parseInt(time2[0]) && parseInt(time1[1]) == parseInt(time2[1]) && parseInt(time1[2]) == parseInt(time2[2])) {
+                    return 0;
+                } else if (parseInt(time1[0]) > parseInt(time2[0])) {
+                    return 1;
                 } else {
-                    if (parseInt(time1[0]) === parseInt(time2[0]) && parseInt(time1[1]) == parseInt(time2[1]) && parseInt(time1[2]) == parseInt(time2[2])) {
-                        return 0;
-                    } else if (parseInt(time1[0]) < parseInt(time2[0])) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
+                    return -1;
                 }
+            } else {
+                if (parseInt(time1[0]) === parseInt(time2[0]) && parseInt(time1[1]) == parseInt(time2[1]) && parseInt(time1[2]) == parseInt(time2[2])) {
+                    return 0;
+                } else if (parseInt(time1[0]) < parseInt(time2[0])) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
 
 
-            });
+        });
 
 
-        
-        self.setState({ flightsArray: flightsArray });
+
+        self.setState({ flightsArray: flightsArray, [departOrArrKey]: sortType });
     }
 
 
@@ -134,35 +142,36 @@ export default class flightHeader extends React.Component {
         let self = this;
         let flightsArray = self.state.flightsArray;
         console.log("flight array", flightsArray);
-            flightsArray.sort((flight1, flight2) => {
-                
-                if (sortType === 'asc') {
-                    if (parseInt(flight1['Price'][sortKey]) === parseInt(flight2['Price'][sortKey]) ) {
-                        return 0;
-                    } else if (parseInt(flight1['Price'][sortKey]) > parseInt(flight2['Price'][sortKey])) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
+        flightsArray.sort((flight1, flight2) => {
+
+            if (sortType === 'asc') {
+                if (parseInt(flight1['Price'][sortKey]) === parseInt(flight2['Price'][sortKey])) {
+                    return 0;
+                } else if (parseInt(flight1['Price'][sortKey]) > parseInt(flight2['Price'][sortKey])) {
+                    return 1;
                 } else {
-                    if (parseInt(flight1['Price'][sortKey]) === parseInt(flight2['Price'][sortKey])) {
-                        return 0;
-                    } else if (parseInt(flight1['Price'][sortKey]) < parseInt(flight2['Price'][sortKey])) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
+                    return -1;
                 }
+            } else {
+                if (parseInt(flight1['Price'][sortKey]) === parseInt(flight2['Price'][sortKey])) {
+                    return 0;
+                } else if (parseInt(flight1['Price'][sortKey]) < parseInt(flight2['Price'][sortKey])) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
 
 
-            });
+        });
 
-        self.setState({ flightsArray: flightsArray });
+        self.setState({ flightsArray: flightsArray, sortDirectionPrice: sortType });
     }
     componentWillMount() {
         let flightsArray = this.state.flightsArray;
         let oneStop = [],
-            airlineNamesArray = [];
+            airlineNamesArray = [],
+            fareClassArray = [];
         flightsArray.map((flight, flightIndex) => {
             if (oneStop.length === 0) {
                 oneStop.push(flight["Segments"][0].length - 1);
@@ -182,9 +191,20 @@ export default class flightHeader extends React.Component {
                 }
             });
 
+            flight["Segments"][0].map((segment, index) => {
+                if (fareClassArray.length === 0) {
+                    fareClassArray.push(segment['Airline']['FareClass']);
+                } else {
+                    if (fareClassArray.indexOf(segment['Airline']['FareClass']) === -1) {
+                        fareClassArray.push(segment['Airline']['FareClass']);
+                    }
+                }
+            });
+
         });
         oneStop.sort();
         airlineNamesArray.sort();
+        fareClassArray.sort();
         oneStop = oneStop.map((value, index) => {
             if (value === 0) {
                 return "Direct"
@@ -194,8 +214,9 @@ export default class flightHeader extends React.Component {
         });
         oneStop.unshift("All");
         airlineNamesArray.unshift("All");
+        fareClassArray.unshift("All");
         console.log("airlineNamesArray array", airlineNamesArray);
-        this.setState({ stopsArray: oneStop, airlinesArray: airlineNamesArray });
+        this.setState({ stopsArray: oneStop, airlinesArray: airlineNamesArray, fareClassArray: fareClassArray });
     }
     cbChange(data, event) {
         // console.log(data,event.target.value, arguments);
@@ -242,9 +263,9 @@ export default class flightHeader extends React.Component {
 
         const getSelectedDeparturevalue = function (time, flightTime) {
             let timeMinSuffix = time.split("-")[0].substr(-2);
-            let minTime = timeMinSuffix === 'PM' ? (parseInt(time.split("-")[0].split(timeMinSuffix)[0]) + 12) : parseInt(time.split("-")[0].split(timeMinSuffix)[0]);
+            let minTime = timeMinSuffix === 'PM' ? (parseInt(time.split("-")[0].split(timeMinSuffix)[0]) + 12) : (parseInt(time.split("-")[0].split(timeMinSuffix)[0]) == 12) ? 0 : parseInt(time.split("-")[0].split(timeMinSuffix)[0]);
             let timeMaxSuffix = time.split("-")[1].substr(-2);
-            let maxTime = timeMaxSuffix === 'PM' ? (parseInt(time.split("-")[1].split(timeMaxSuffix)[0]) + 12) : parseInt(time.split("-")[1].split(timeMaxSuffix)[0]);
+            let maxTime = timeMaxSuffix === 'PM' ? (parseInt(time.split("-")[1].split(timeMaxSuffix)[0]) + 12) : (parseInt(time.split("-")[1].split(timeMaxSuffix)[0]) == 12) ? 0 : parseInt(time.split("-")[1].split(timeMaxSuffix)[0]);
             console.log("mixman", minTime, maxTime);
             if (parseInt(flightTime.split(":")[0]) >= minTime) {
                 if (parseInt(flightTime.split(":")[0]) < maxTime) {
@@ -279,7 +300,8 @@ export default class flightHeader extends React.Component {
 
         if ((this.state.selectedStop === "" || this.state.selectedStop === "All") && (this.state.selectedFareType === "" || this.state.selectedFareType === "All")
             && (this.state.selectedAirlines === "" || this.state.selectedAirlines === "All") && (this.state.selectedDepartureTime === "" || this.state.selectedDepartureTime === "All")
-            && (this.state.selectedArrTime === "" || this.state.selectedArrTime === "All")) {
+            && (this.state.selectedArrTime === "" || this.state.selectedArrTime === "All")
+            && (this.state.selectedFareClass === "" || this.state.selectedFareClass === "All")) {
             flightsArray = flightsArray;
             console.log("flight array", flightsArray);
         } else {
@@ -289,6 +311,7 @@ export default class flightHeader extends React.Component {
                 let selectedAirlines = false;
                 let selectedDepartureTime = false;
                 let selectedArrTime = false;
+                let selectedFareClass = false;
 
 
 
@@ -332,8 +355,18 @@ export default class flightHeader extends React.Component {
                     selectedArrTime = getSelectedArrvalue(self.state.selectedArrTime, flight["Segments"][0][flight["Segments"][0].length - 1]["Destination"]["ArrTime"].split("T")[1]);
                 }
 
+                if (self.state.selectedFareClass === 'All' || self.state.selectedFareClass === "") {
+                    selectedFareClass = true;
+                } else {
+                    flight["Segments"][0].map((segment, index) => {
+                        if (segment['Airline']['FareClass'] === self.state.selectedFareClass) {
+                            selectedFareClass = true;
+                        }
+                    });
+                }
+
                 flight.OriginalIndex = index;
-                return selectedStopFlag && selectedFareType && selectedAirlines && selectedDepartureTime && selectedArrTime;
+                return selectedStopFlag && selectedFareType && selectedAirlines && selectedDepartureTime && selectedArrTime && selectedFareClass;
             });
 
 
@@ -365,8 +398,8 @@ export default class flightHeader extends React.Component {
                                 <div role="tabpanel" className="tab-pane active" id="fm-1">
                                     <div className="row no-gutter filter-bar-wrap">
                                         <div className="row filter-bar">
+                                            <label className="filter-by modal-filter-by-cls">Filter By </label>
                                             <div className="col-md-12 col-sm-12 col-xs-12 pd-0">
-                                                <label className="filter-by">Filter By </label>
                                                 <Select2
                                                     data={self.state.stopsArray}
                                                     value={self.state.selectedStop}
@@ -378,7 +411,7 @@ export default class flightHeader extends React.Component {
                                                     }
                                                 />
                                                 <Select2
-                                                    data={["All", "4AM-10AM", "10AM-4PM", "4PM-8PM", "8PM-4AM"]}
+                                                    data={["All", "12AM-6AM", "6AM-12PM", "12PM-6PM", "6PM-12AM"]}
                                                     value={self.state.selectedDepartureTime}
                                                     onSelect={self.cbChange.bind(this, 'selectedDepartureTime')}
 
@@ -411,11 +444,21 @@ export default class flightHeader extends React.Component {
                                                 />
                                                 <Select2
                                                     onSelect={self.cbChange.bind(this, 'selectedArrTime')}
-                                                    data={["All", "4AM-10AM", "10AM-4PM", "4PM-8PM", "8PM-4AM"]}
+                                                    data={["All", "12AM-6AM", "6AM-12PM", "12PM-6PM", "6PM-12AM"]}
                                                     value={self.state.selectedArrTime}
                                                     options={
                                                         {
                                                             placeholder: 'Arr Time',
+                                                        }
+                                                    }
+                                                />
+                                                <Select2
+                                                    onSelect={self.cbChange.bind(this, 'selectedFareClass')}
+                                                    data={self.state.fareClassArray}
+                                                    value={self.state.selectedFareClass}
+                                                    options={
+                                                        {
+                                                            placeholder: 'Fare Class',
                                                         }
                                                     }
                                                 />
@@ -427,23 +470,22 @@ export default class flightHeader extends React.Component {
                                         <div className="col-md-2 col-sm-2 col-xs-2">
                                             Sort by:
                                         </div>
-                                        <div className="col-md-2 col-sm-2 col-xs-2" >
+                                        <div className="col-md-2 col-sm-2 col-xs-2" onClick={this.sortFlight.bind(this, 'DepTime', self.state.sortDirectionDepTime == "" ? 'asc' : (self.state.sortDirectionDepTime == 'asc') ? 'des' : 'asc')}>
                                             Depart
-                                            <span class="down arrow" onClick={this.sortFlight.bind(this, 'DepTime', 'asc')}> aSC</span>
-                                            <span onClick={this.sortFlight.bind(this, 'DepTime', 'des')}>Desc</span>
+                                            <span className={self.state.sortDirectionDepTime === "asc" ? "glyphicon glyphicon-arrow-up" : (self.state.sortDirectionDepTime === "des") ? "glyphicon glyphicon-arrow-down" : ""} onClick={this.sortFlight.bind(this, 'DepTime', self.state.sortDirectionDepTime === "asc" ? 'des' : 'asc')}> </span>
                                         </div>
-                                        <div className="col-md-4 col-sm-2 col-xs-2" onClick={this.sortFlight.bind(this, 'Duration')} >
+                                        <div className="col-md-4 col-sm-2 col-xs-2" onClick={this.sortDuration.bind(this, 'Duration', self.state.sortDirectionDuration == "" ? 'asc' : (self.state.sortDirectionDuration == 'asc') ? 'des' : 'asc')} >
                                             Duration
+                                             <span className={self.state.sortDirectionDuration === "asc" ? "glyphicon glyphicon-arrow-up" : (self.state.sortDirectionDuration === "des") ? "glyphicon glyphicon-arrow-down" : ""} onClick={this.sortFlight.bind(this, 'Duration', self.state.sortDirectionDuration === "asc" ? 'des' : 'asc')}> </span>
+        
                                         </div>
-                                        <div className="col-md-2 col-sm-2 col-xs-2"  >
+                                        <div className="col-md-2 col-sm-2 col-xs-2" onClick={this.sortFlight.bind(this, 'ArrTime', self.state.sortDirectionArrTime == "" ? 'asc' : (self.state.sortDirectionArrTime == 'asc') ? 'des' : 'asc')}>
                                             Arrive
-                                            <span onClick={this.sortFlight.bind(this, 'ArrTime', 'asc')}>Asc</span>
-                                            <span onClick={this.sortFlight.bind(this, 'ArrTime', 'des')}>Desc</span>
+                                             <span className={self.state.sortDirectionArrTime === "asc" ? "glyphicon glyphicon-arrow-up" : (self.state.sortDirectionArrTime === "des") ? "glyphicon glyphicon-arrow-down" : ""} onClick={this.sortFlight.bind(this, 'ArrTime', self.state.sortDirectionArrTime === "asc" ? 'des' : 'asc')}> </span>
                                         </div>
-                                        <div className="col-md-2 col-sm-2 col-xs-2" >
+                                        <div className="col-md-2 col-sm-2 col-xs-2" onClick={this.sortPrice.bind(this, 'OfferedFare', self.state.sortDirectionPrice == 'asc' ? 'des' : 'asc')} >
                                             Price
-                                             <span onClick={this.sortPrice.bind(this, 'OfferedFare', 'asc')}>Asc</span>
-                                            <span onClick={this.sortPrice.bind(this, 'OfferedFare', 'des')}>Desc</span>
+                                             <span className={self.state.sortDirectionPrice === 'asc' ? "glyphicon glyphicon-arrow-up" : "glyphicon glyphicon-arrow-down"} onClick={this.sortPrice.bind(this, 'OfferedFare', self.state.sortDirectionPrice == 'asc' ? 'des' : 'asc')}></span>
                                         </div>
                                     </div>
                                     {

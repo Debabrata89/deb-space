@@ -87,8 +87,8 @@ export default class Box extends React.Component {
                                         {flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]["Segments"][0].map((segment, index) => {
                                             return (<div key={index} className="flight-body">
                                                 <div className="row flights-wrap">
-                                                    <div className="col-md-3 col-sm-3 col-xs-12 flight-logo">
-                                                        <img src={"src/assets/images/" + self.getImage(flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]["AirlineCode"])} />
+                                                    <div className="col-md-2 col-sm-2 col-xs-12 flight-logo">
+                                                        <img className="img-cls" src={"src/assets/images/" + self.getImage(flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]["AirlineCode"])} />
                                                         <div>
                                                             <p>{segment["Airline"]["AirlineName"]} </p>
                                                             <p>{flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]["AirlineCode"]}</p>
@@ -102,7 +102,7 @@ export default class Box extends React.Component {
                                                             <li className="airport">{segment["Origin"]["Airport"]["AirportName"]},</li>
                                                         </ul>
                                                     </div>
-                                                    <div className="col-md-3 col-sm-3 col-xs-12 pd-0">
+                                                    <div className="col-md-4 col-sm-4 col-xs-12 pd-0">
                                                         <ul>
                                                             <li className="airport">{segment["Airline"]["FareClass"]} |
                                                                 {flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]['isRefundable'] ? 'Refundable' : 'NonRefundable'} |
@@ -128,10 +128,10 @@ export default class Box extends React.Component {
                                                             <li className="airport">{segment["Destination"]["Airport"]["AirportName"]},</li>
                                                         </ul>
                                                     </div>
-                                                    <div
+                                                    {index!==flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex]["Segments"][0].length-1?<div
                                                         className="col-md-12 col-sm-12 col-xs-12 change-flight">
-                                                        <p>Change flight in Indore Layover time 2:30 HRS</p>
-                                                    </div>
+                                                        <p>Change flight in {segment["Destination"]["Airport"]["AirportName"]} Layover time {(flightData[self.state.daySelected]["Response"]["Results"][0][self.state.resultIndex].TotalDurationOngoing/60).toFixed(2)}HRS</p>
+                                                    </div>:null}
                                                 </div>
                                             </div>);
                                         })
