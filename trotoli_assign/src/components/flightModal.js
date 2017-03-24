@@ -22,7 +22,8 @@ export default class flightHeader extends React.Component {
             sortDirectionDepTime: "",
             sortDirectionArrTime: "",
             sortDirectionPrice: "asc",
-            sortDirectionDuration: ""
+            sortDirectionDuration: "",
+            sortColumn: 'price'
         };
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
@@ -68,27 +69,25 @@ export default class flightHeader extends React.Component {
         console.log("data", sortKey, sortType);
         let self = this;
         let flightsArray = self.state.flightsArray;
-        flightsArray.map((flight, index) => {
-            flight["Segments"][0].sort((segment1, segment2) => {
+        flightsArray.sort((flight1, flight2) => {
                 if (sortType === 'asc') {
-                    if (segment1.Duration === segment2.Duration) {
+                    if (flight1.TotalDurationOngoing === flight2.TotalDurationOngoing) {
                         return 0;
-                    } else if (segment1.Duration > segment2.Duration) {
+                    } else if (flight1.TotalDurationOngoing > flight2.TotalDurationOngoing) {
                         return 1;
                     } else {
                         return -1
                     }
 
                 } else {
-                    if (segment1.Duration === segment2.Duration) {
+                    if (flight1.TotalDurationOngoing === flight2.TotalDurationOngoing) {
                         return 0;
-                    } else if (segment1.Duration < segment2.Duration) {
+                    } else if (flight1.TotalDurationOngoing < flight2.TotalDurationOngoing) {
                         return 1;
                     } else {
                         return -1
                     }
                 }
-            });
 
 
 
@@ -97,7 +96,7 @@ export default class flightHeader extends React.Component {
 
 
 
-        self.setState({ flightsArray: flightsArray, sortDirectionDuration: sortType });
+        self.setState({ flightsArray: flightsArray, sortDirectionDuration: sortType, sortColumn: 'duration' });
     }
 
     sortFlight(sortKey, sortType, event) {
@@ -108,8 +107,8 @@ export default class flightHeader extends React.Component {
         let sortKeyParent = sortKey === 'DepTime' ? 'Origin' : 'Destination';
         let departOrArrKey = sortKey === 'DepTime' ? 'sortDirectionDepTime' : 'sortDirectionArrTime';
         flightsArray.sort((flight1, flight2) => {
-            let time1 =sortKey === 'DepTime'? flight1["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":") : flight1["Segments"][0][flight1["Segments"][0].length-1][sortKeyParent][sortKey].split("T")[1].split(":");
-            let time2 =sortKey === 'DepTime' ?  flight2["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":") : flight2["Segments"][0][flight2["Segments"][0].length-1][sortKeyParent][sortKey].split("T")[1].split(":");
+            let time1 = sortKey === 'DepTime' ? flight1["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":") : flight1["Segments"][0][flight1["Segments"][0].length - 1][sortKeyParent][sortKey].split("T")[1].split(":");
+            let time2 = sortKey === 'DepTime' ? flight2["Segments"][0][0][sortKeyParent][sortKey].split("T")[1].split(":") : flight2["Segments"][0][flight2["Segments"][0].length - 1][sortKeyParent][sortKey].split("T")[1].split(":");
             if (sortType === 'asc') {
                 if (parseInt(time1[0]) === parseInt(time2[0]) && parseInt(time1[1]) == parseInt(time2[1]) && parseInt(time1[2]) == parseInt(time2[2])) {
                     return 0;
@@ -131,9 +130,9 @@ export default class flightHeader extends React.Component {
 
         });
 
+        let sortColumn = sortKey === 'DepTime' ? 'deparTime' : 'arrTime';
 
-
-        self.setState({ flightsArray: flightsArray, [departOrArrKey]: sortType });
+        self.setState({ flightsArray: flightsArray, [departOrArrKey]: sortType, sortColumn: sortColumn });
     }
 
 
@@ -165,7 +164,7 @@ export default class flightHeader extends React.Component {
 
         });
 
-        self.setState({ flightsArray: flightsArray, sortDirectionPrice: sortType });
+        self.setState({ flightsArray: flightsArray, sortDirectionPrice: sortType, sortColumn: 'price' });
     }
     componentWillMount() {
         let flightsArray = this.state.flightsArray;
@@ -472,20 +471,20 @@ export default class flightHeader extends React.Component {
                                         </div>
                                         <div className="col-md-2 col-sm-2 col-xs-2" onClick={this.sortFlight.bind(this, 'DepTime', self.state.sortDirectionDepTime == "" ? 'asc' : (self.state.sortDirectionDepTime == 'asc') ? 'des' : 'asc')}>
                                             Depart
-                                            <span className={self.state.sortDirectionDepTime === "asc" ? "glyphicon glyphicon-arrow-up" : (self.state.sortDirectionDepTime === "des") ? "glyphicon glyphicon-arrow-down" : ""} onClick={this.sortFlight.bind(this, 'DepTime', self.state.sortDirectionDepTime === "asc" ? 'des' : 'asc')}> </span>
+                                            <span className={self.state.sortColumn === 'deparTime' && self.state.sortDirectionDepTime === "asc" ? "glyphicon glyphicon-arrow-up" : (self.state.sortColumn === 'deparTime' && self.state.sortDirectionDepTime === "des") ? "glyphicon glyphicon-arrow-down" : ""} onClick={this.sortFlight.bind(this, 'DepTime', self.state.sortDirectionDepTime === "asc" ? 'des' : 'asc')}> </span>
                                         </div>
                                         <div className="col-md-4 col-sm-2 col-xs-2" onClick={this.sortDuration.bind(this, 'Duration', self.state.sortDirectionDuration == "" ? 'asc' : (self.state.sortDirectionDuration == 'asc') ? 'des' : 'asc')} >
                                             Duration
-                                             <span className={self.state.sortDirectionDuration === "asc" ? "glyphicon glyphicon-arrow-up" : (self.state.sortDirectionDuration === "des") ? "glyphicon glyphicon-arrow-down" : ""} onClick={this.sortFlight.bind(this, 'Duration', self.state.sortDirectionDuration === "asc" ? 'des' : 'asc')}> </span>
-        
+                                             <span className={self.state.sortColumn==='duration' && self.state.sortDirectionDuration === "asc" ? "glyphicon glyphicon-arrow-up" : (self.state.sortColumn==='duration' && self.state.sortDirectionDuration === "des") ? "glyphicon glyphicon-arrow-down" : ""} onClick={this.sortFlight.bind(this, 'Duration', self.state.sortDirectionDuration === "asc" ? 'des' : 'asc')}> </span>
+
                                         </div>
                                         <div className="col-md-2 col-sm-2 col-xs-2" onClick={this.sortFlight.bind(this, 'ArrTime', self.state.sortDirectionArrTime == "" ? 'asc' : (self.state.sortDirectionArrTime == 'asc') ? 'des' : 'asc')}>
                                             Arrive
-                                             <span className={self.state.sortDirectionArrTime === "asc" ? "glyphicon glyphicon-arrow-up" : (self.state.sortDirectionArrTime === "des") ? "glyphicon glyphicon-arrow-down" : ""} onClick={this.sortFlight.bind(this, 'ArrTime', self.state.sortDirectionArrTime === "asc" ? 'des' : 'asc')}> </span>
+                                             <span className={self.state.sortColumn === 'arrTime' && self.state.sortDirectionArrTime === "asc" ? "glyphicon glyphicon-arrow-up" : (self.state.sortColumn === 'arrTime' && self.state.sortDirectionArrTime === "des") ? "glyphicon glyphicon-arrow-down" : ""} onClick={this.sortFlight.bind(this, 'ArrTime', self.state.sortDirectionArrTime === "asc" ? 'des' : 'asc')}> </span>
                                         </div>
-                                        <div className="col-md-2 col-sm-2 col-xs-2" onClick={this.sortPrice.bind(this, 'OfferedFare', self.state.sortDirectionPrice == 'asc' ? 'des' : 'asc')} >
+                                        <div className="col-md-2 col-sm-2 col-xs-2" onClick={this.sortPrice.bind(this, 'OfferedFare', self.state.sortDirectionPrice == "" ? 'asc' : (self.state.sortDirectionPrice == 'asc') ? 'des' : 'asc')} >
                                             Price
-                                             <span className={self.state.sortDirectionPrice === 'asc' ? "glyphicon glyphicon-arrow-up" : "glyphicon glyphicon-arrow-down"} onClick={this.sortPrice.bind(this, 'OfferedFare', self.state.sortDirectionPrice == 'asc' ? 'des' : 'asc')}></span>
+                                             <span className={self.state.sortColumn === 'price' && self.state.sortDirectionPrice === 'asc' ? "glyphicon glyphicon-arrow-up" : (self.state.sortColumn === 'price' && self.state.sortDirectionPrice === 'des') ? "glyphicon glyphicon-arrow-down" : ""} onClick={this.sortPrice.bind(this, 'OfferedFare', self.state.sortDirectionPrice == 'asc' ? 'des' : 'asc')}></span>
                                         </div>
                                     </div>
                                     {
